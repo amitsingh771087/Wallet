@@ -1,7 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { sql } from './config/db.js';
+import initDB from './model/transaction.js';
+
+import transactionRoutes from './router/transactionRoutes.js';
+
 
 const app = express();
 dotenv.config();
@@ -10,26 +13,9 @@ const Port  = process.env.PORT || 9001;
 app.use(cors());
 app.use(express.json());
 
-async function initDB() {
-    try {
-        await sql`CREATE TABLE IF NOT EXISTS transactions(
-        id SERIAL PRIMARY KEY,
-        user_id VARCHAR(255) NOT NULL,
-        title VARCHAR(255) NOT NULL,
-        amount decimal(10,2) NOT NULL,
-        category VARCHAR(255) NOT NULL,
-        created_at DATE NOT NULL DEFAULT CURRENT_DATE
-        )`
+app.use('/api', transactionRoutes)
 
-        console.log("DB initialized successfully")
 
-    } catch (error) {
-        console.log("error while initializing database ", error);
-        process.exit(1);
-        
-    }
-    
-}
 
 app.get('/' ,(req,res)=>{
     res.send("Hello World")
