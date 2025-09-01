@@ -52,8 +52,8 @@ export const useTransactions = (user_id) => {
   const deleteTransaction = async (id) => {
     try {
       const res = await axios.delete(`${API_URI}/transactions/${id}`);
-      if (!res.data.success) throw new Error("Failed to delete transaction");
 
+      if (res.status !== 200) throw new Error("Failed to delete transaction");
       // refetch transactions and summary
       await loadData();
       Alert.alert("Success", "Transaction deleted successfully");
